@@ -10,7 +10,6 @@ const icingaApi = require('./lib/icinga/api');
  * @property {String} Event
  * @property {String} EC2InstanceId
  * @property {Object} Details
- * @property {String} "Availability Zone"
  */
 exports.handler = (event, context, callback) => {
     const message = JSON.parse(event.Records[0].Sns.Message);
