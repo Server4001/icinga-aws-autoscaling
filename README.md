@@ -1,6 +1,6 @@
 # icinga-aws-autoscaling
 
-## Management of dynamic AWS Auto-Scaling Group inventory in Icinga.
+## Dynamic management of AWS Auto-Scaling Group inventory in Icinga.
 
 ### TODO:
 
