@@ -3,6 +3,16 @@ const request = require('request');
 const util = require('util');
 const config = require('./config'); // TODO : Change out for environment variables in lambda.
 
+/**
+ * @var {object} event
+ * @property {Array} Records
+ * @property {Object} Sns
+ * @property {Object} Message
+ * @property {String} Event
+ * @property {String} EC2InstanceId
+ * @property {Object} Details
+ * @property {String} Availability Zone
+ */
 exports.handler = (event, context, callback) => {
     const message = JSON.parse(event.Records[0].Sns.Message);
     const eventName = message.Event;
@@ -12,11 +22,13 @@ exports.handler = (event, context, callback) => {
     if (eventName === 'autoscaling:EC2_INSTANCE_LAUNCH') {
         AWS.config.region = region;
 
+        //noinspection JSCheckFunctionSignatures
         let ec2 = new AWS.EC2({ apiVersion: '2016-11-15' });
         const callData = { InstanceIds: [ instanceId ], DryRun: false };
 
         ec2.describeInstances(callData, (err, data) => {
             if (err) {
+                //noinspection JSUnresolvedVariable
                 console.log('Error', err.stack);
                 callback({ message: err.message, code: err.code });
 
@@ -53,6 +65,10 @@ exports.handler = (event, context, callback) => {
 const sendIcingaRequest = (requestOptions) => {
     return new Promise((resolve, reject) => {
         try {
+            /**
+             * @var {Object} body
+             * @property {Object} results
+             */
             request(requestOptions, function(error, response, body) {
                 if (error) {
                     return reject({
