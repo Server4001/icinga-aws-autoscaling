@@ -19,21 +19,17 @@ exports.handler = (event, context, callback) => {
     const instanceId = message.EC2InstanceId;
 
     if (eventName === 'autoscaling:EC2_INSTANCE_LAUNCH') {
-        awsApi.ec2Facts(instanceId, region, (err, data) => {
-            if (err) {
-                console.log('Error', err.stack);
-                callback({ message: err.message, code: err.code });
-
-                return;
-            }
-
+        awsApi.ec2Facts(instanceId, region).then((data) => {
             icingaApi.createHost(instanceId, data.publicDns, data.instanceSize).then(() => {
                 callback(null);
             }).catch((error) => {
                 console.log(error);
                 callback({ message: error.message });
             });
-        })
+        }).catch((err) => {
+            console.log('Error', err.stack);
+            callback({ message: err.message, code: err.code });
+        });
     } else if (eventName === 'autoscaling:EC2_INSTANCE_TERMINATE') {
         icingaApi.deleteHost(instanceId).then(() => {
             callback(null);
