@@ -1,4 +1,4 @@
-# icinga-aws-asg
+# icinga-aws-autoscaling
 
 ## Management of dynamic AWS Auto-Scaling Group inventory in Icinga.
 
