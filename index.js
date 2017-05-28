@@ -25,8 +25,9 @@ exports.handler = (event, context, callback) => {
 
             const instanceSize = data.Reservations[0].Instances[0].InstanceType;
             const publicDns = data.Reservations[0].Instances[0].PublicDnsName;
+            const requestOptions = createHostRequestOptions(instanceId, publicDns, instanceSize);
 
-            createIcingaHost(instanceId, publicDns, instanceSize).then(() => {
+            sendIcingaRequest(requestOptions).then(() => {
                 callback(null);
             }).catch((error) => {
                 console.log(error);
@@ -34,44 +35,30 @@ exports.handler = (event, context, callback) => {
             });
         });
     } else if (eventName === 'autoscaling:EC2_INSTANCE_TERMINATE') {
-        console.log({ id: instanceId, region: region, event: 'SCALE IN' });
+        const requestOptions = deleteHostRequestOptions(instanceId);
+
+        sendIcingaRequest(requestOptions).then(() => {
+            callback(null);
+        }).catch((error) => {
+            console.log(error);
+            callback({ message: error.message });
+        });
     } else {
         console.log('UNKNOWN EVENT NAME', eventName);
         console.log(util.inspect(event, {showHidden: true, depth: null}));
+        callback(null);
     }
-
-    callback(null); // TODO : MOVE THIS.
 };
 
-const createIcingaHost = (instanceId, publicDns, instanceSize) => {
+const sendIcingaRequest = (requestOptions) => {
     return new Promise((resolve, reject) => {
-        const requestOptions = {
-            method: 'PUT',
-            uri: `https://${config.icinga.host}:${config.icinga.port}/v1/objects/hosts/${instanceId}`,
-            headers: {
-                'Accept': 'application/json'
-            },
-            auth: {
-                user: config.icinga.user,
-                pass: config.icinga.password
-            },
-            json: {
-                templates: [ 'generic-host' ],
-                attrs: {
-                    address: publicDns,
-                    'vars.os' : 'Linux', // TODO : Make this dynamic.
-                    'vars.instance_size': instanceSize,
-                    'vars.hostgroups': 'X,linux-servers,X', // TODO : Make this dynamic.
-                    groups: [ 'linux-servers' ] // TODO : Make this dynamic.
-                    // TODO : Add group for the ASG name.
-                }
-            }
-        };
-
         try {
             request(requestOptions, function(error, response, body) {
                 if (error) {
-                    return reject({ message: error.message, data: {} });
+                    return reject({
+                        message: 'Request level exception occurred.',
+                        data: { exception: error }
+                    });
                 }
                 if (response.statusCode !== 200) {
                     return reject({
@@ -101,4 +88,47 @@ const createIcingaHost = (instanceId, publicDns, instanceSize) => {
             });
         }
     });
+};
+
+const createHostRequestOptions = (instanceId, publicDns, instanceSize) => {
+    return {
+        method: 'PUT',
+        uri: `https://${config.icinga.host}:${config.icinga.port}/v1/objects/hosts/${instanceId}`,
+        strictSSL: false,
+        headers: {
+            'Accept': 'application/json'
+        },
+        auth: {
+            user: config.icinga.user,
+            pass: config.icinga.password
+        },
+        json: {
+            templates: [ 'generic-host' ],
+            attrs: {
+                address: publicDns,
+                'vars.os' : 'Linux', // TODO : Make this dynamic.
+                'vars.instance_size': instanceSize,
+                'vars.hostgroups': 'X,linux-servers,X', // TODO : Make this dynamic.
+                groups: [ 'linux-servers' ] // TODO : Make this dynamic.
+                // TODO : Add group for the ASG name.
+            }
+        }
+    };
+};
+
+const deleteHostRequestOptions = (instanceId) => {
+    return {
+        method: 'POST',
+        uri: `https://${config.icinga.host}:${config.icinga.port}/v1/objects/hosts/${instanceId}?cascade=1`,
+        strictSSL: false,
+        headers: {
+            'Accept': 'application/json',
+            'X-HTTP-Method-Override': 'DELETE'
+        },
+        auth: {
+            user: config.icinga.user,
+            pass: config.icinga.password
+        },
+        json: {}
+    };
 };
