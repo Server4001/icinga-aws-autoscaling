@@ -1,0 +1,15 @@
+{
+  "name": "icinga-aws-asg",
+  "version": "0.1.0",
+  "description": "Manage dynamic inventory in Icinga 2 from an AWS Auto-Scaling Group.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brice Bentler",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "2.58.0",
+    "request": "2.81.0"
+  }
+}
