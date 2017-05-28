@@ -1,0 +1,7 @@
+{
+    "host": "1.2.3.4",
+    "port": 5665,
+    "user": "root",
+    "password": "password",
+    "verbose": false
+}
