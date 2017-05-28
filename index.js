@@ -36,9 +36,8 @@ exports.handler = (event, context, callback) => {
 
             const instanceSize = data.Reservations[0].Instances[0].InstanceType;
             const publicDns = data.Reservations[0].Instances[0].PublicDnsName;
-            const requestOptions = icingaApi.createHostRequestOptions(instanceId, publicDns, instanceSize);
 
-            icingaApi.sendIcingaRequest(requestOptions).then(() => {
+            icingaApi.createHost(instanceId, publicDns, instanceSize).then(() => {
                 callback(null);
             }).catch((error) => {
                 console.log(error);
@@ -46,9 +45,7 @@ exports.handler = (event, context, callback) => {
             });
         });
     } else if (eventName === 'autoscaling:EC2_INSTANCE_TERMINATE') {
-        const requestOptions = icingaApi.deleteHostRequestOptions(instanceId);
-
-        icingaApi.sendIcingaRequest(requestOptions).then(() => {
+        icingaApi.deleteHost(instanceId).then(() => {
             callback(null);
         }).catch((error) => {
             console.log(error);
