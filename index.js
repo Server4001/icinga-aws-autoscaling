@@ -1,5 +1,5 @@
-let AWS = require('aws-sdk');
 const util = require('util');
+const awsApi = require('./lib/aws/api');
 const icingaApi = require('./lib/icinga/api');
 
 /**
@@ -19,31 +19,21 @@ exports.handler = (event, context, callback) => {
     const instanceId = message.EC2InstanceId;
 
     if (eventName === 'autoscaling:EC2_INSTANCE_LAUNCH') {
-        AWS.config.region = region;
-
-        //noinspection JSCheckFunctionSignatures
-        let ec2 = new AWS.EC2({ apiVersion: '2016-11-15' });
-        const callData = { InstanceIds: [ instanceId ], DryRun: false };
-
-        ec2.describeInstances(callData, (err, data) => {
+        awsApi.ec2Facts(instanceId, region, (err, data) => {
             if (err) {
-                //noinspection JSUnresolvedVariable
                 console.log('Error', err.stack);
                 callback({ message: err.message, code: err.code });
 
                 return;
             }
 
-            const instanceSize = data.Reservations[0].Instances[0].InstanceType;
-            const publicDns = data.Reservations[0].Instances[0].PublicDnsName;
-
-            icingaApi.createHost(instanceId, publicDns, instanceSize).then(() => {
+            icingaApi.createHost(instanceId, data.publicDns, data.instanceSize).then(() => {
                 callback(null);
             }).catch((error) => {
                 console.log(error);
                 callback({ message: error.message });
             });
-        });
+        })
     } else if (eventName === 'autoscaling:EC2_INSTANCE_TERMINATE') {
         icingaApi.deleteHost(instanceId).then(() => {
             callback(null);
@@ -52,6 +42,7 @@ exports.handler = (event, context, callback) => {
             callback({ message: error.message });
         });
     } else {
+        // TODO : Consider removing this.
         console.log('UNKNOWN EVENT NAME', eventName);
         console.log(util.inspect(event, {showHidden: true, depth: null}));
         callback(null);
