@@ -9,3 +9,6 @@
 * Dynamic host-groups based on tags.
 * Group hosts by ASG name.
 * Example host-group and service templates for NRPE.
+* Move AWS SDK to dev dependencies, as Lambda includes it.
+* Deploy script.
+* Overrides using environment vars.
