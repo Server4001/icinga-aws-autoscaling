@@ -1,8 +1,6 @@
 {
-    "icinga": {
-        "host": "1.2.3.4",
-        "port": 5665,
-        "user": "root",
-        "password": "password"
-    }
+    "icinga_host": "1.2.3.4",
+    "icinga_port": 5665,
+    "icinga_user": "root",
+    "icinga_pass": "password"
 }
