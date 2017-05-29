@@ -3,7 +3,7 @@
 const awsApi = require('./lib/aws/api');
 const config = require('./config.json');
 const eventParser = require('./lib/event_parser');
-const icingaApi = require('./lib/icinga/api');
+const icingaApiFactory = require('./lib/icinga/api');
 const logger = require('./lib/logger');
 
 exports.handler = (event, context, callback) => {
@@ -25,6 +25,7 @@ exports.handler = (event, context, callback) => {
     const eventName = message.event_name;
     const region = message.region;
     const instanceId = message.instance_id;
+    const icingaApi = icingaApiFactory(config);
 
     if (eventName === 'autoscaling:EC2_INSTANCE_LAUNCH') {
 
