@@ -13,6 +13,13 @@ const icingaApi = require('./lib/icinga/api');
  */
 exports.handler = (event, context, callback) => {
     const message = JSON.parse(event.Records[0].Sns.Message);
+
+    if (message.Event === undefined || message.Details === undefined || message.EC2InstanceId === undefined) {
+        callback(null);
+
+        return;
+    }
+
     const eventName = message.Event;
     const region = message.Details['Availability Zone'].slice(0, -1);
     const instanceId = message.EC2InstanceId;
