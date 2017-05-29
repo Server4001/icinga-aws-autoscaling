@@ -1,20 +1,13 @@
-const util = require('util');
 const awsApi = require('./lib/aws/api');
+const eventParser = require('./lib/event_parser');
 const icingaApi = require('./lib/icinga/api');
 
-/**
- * @var {object} event
- * @property {Array} Records
- * @property {Object} Sns
- * @property {Object} Message
- * @property {String} Event
- * @property {String} EC2InstanceId
- * @property {Object} Details
- */
 exports.handler = (event, context, callback) => {
-    const message = JSON.parse(event.Records[0].Sns.Message);
 
-    if (message.Event === undefined || message.Details === undefined || message.EC2InstanceId === undefined) {
+    /** @var {object} message */
+    const message = eventParser(event);
+
+    if (message === null) {
         callback(null);
 
         return;
@@ -25,8 +18,10 @@ exports.handler = (event, context, callback) => {
     const instanceId = message.EC2InstanceId;
 
     if (eventName === 'autoscaling:EC2_INSTANCE_LAUNCH') {
+
         awsApi.ec2Facts(instanceId, region).then((data) => {
             icingaApi.createHost(instanceId, data.publicDns, data.instanceSize).then(() => {
+                console.log(`Created Host: ${instanceId}`);
                 callback(null);
             }).catch((error) => {
                 console.log(error);
@@ -36,17 +31,19 @@ exports.handler = (event, context, callback) => {
             console.log('Error', err.stack);
             callback({ message: err.message, code: err.code });
         });
+
     } else if (eventName === 'autoscaling:EC2_INSTANCE_TERMINATE') {
+
         icingaApi.deleteHost(instanceId).then(() => {
+            console.log(`Deleted Host: ${instanceId}`);
             callback(null);
         }).catch((error) => {
             console.log(error);
             callback({ message: error.message });
         });
+
     } else {
-        // TODO : Consider removing this.
-        console.log('UNKNOWN EVENT NAME', eventName);
-        console.log(util.inspect(event, {showHidden: true, depth: null}));
+        console.log('UNKNOWN EVENT NAME: ', eventName);
         callback(null);
     }
 };
