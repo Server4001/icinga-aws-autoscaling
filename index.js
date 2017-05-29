@@ -1,3 +1,4 @@
+'use strict';
 const awsApi = require('./lib/aws/api');
 const eventParser = require('./lib/event_parser');
 const icingaApi = require('./lib/icinga/api');
