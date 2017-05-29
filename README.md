@@ -34,7 +34,7 @@ Out of the box, no Icinga 2 config changes are necessary, though it can be usefu
 * You do not need to enable the trigger yet.
 * Enter a name and description for the function, then choose a runtime of "Node.js 6.10".
 * For the Lambda function code, choose "Upload a .ZIP file", then select the zip of this repo that we created earlier.
-* For the "function handler", enter `index.handler`
+* For the "function handler", enter `lambda.handler`
 * For the "function role", you will need to create a new IAM role. Choose "Create a custom role".
     * This will open a new window where you can create a new IAM role.
     * Enter an appropriate Role Name.
@@ -106,16 +106,16 @@ Out of the box, no Icinga 2 config changes are necessary, though it can be usefu
 * Open a Node.js REPL using: `node`
 * You can simulate an ASG Launch/Terminate event using the following code. If everything is set up correctly, you should see hosts added/removed in Icinga.
 ```js
-const index = require('./index');
+const lambda = require('./lambda');
 const callback = (result) => { if (result !== null) { console.log(result); } };
 const instanceId = 'i-1234567890abcdef1';
 const az = 'us-west-2b';
 
 const launchEvent = {Records: [{Sns: {Message: `{"Event": "autoscaling:EC2_INSTANCE_LAUNCH", "Details": {"Availability Zone": "${az}"}, "EC2InstanceId": "${instanceId}"}`}}]};
-index.handler(launchEvent, {}, callback);
+lambda.handler(launchEvent, {}, callback);
 
 const terminateEvent = {Records: [{Sns: {Message: `{"Event": "autoscaling:EC2_INSTANCE_TERMINATE", "Details": {"Availability Zone": "${az}"}, "EC2InstanceId": "${instanceId}"}`}}]};
-index.handler(terminateEvent, {}, callback);
+lambda.handler(terminateEvent, {}, callback);
 ```
 * Don't forget to replace the Availability Zone and EC2 Instance ID.
 
