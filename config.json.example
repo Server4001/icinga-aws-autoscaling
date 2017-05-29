@@ -2,5 +2,10 @@
     "icinga_host": "1.2.3.4",
     "icinga_port": 5665,
     "icinga_user": "root",
-    "icinga_pass": "password"
+    "icinga_pass": "password",
+    "icinga_host_os": "Linux",
+    "icinga_hostgroups": [
+        "aws",
+        "some-other-group"
+    ]
 }

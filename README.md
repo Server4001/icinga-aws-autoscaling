@@ -4,8 +4,14 @@
 
 ### Preparing the code for AWS Lambda
 * Copy `./config.json.example` to `./config.json`. Replace the settings inside with those applicable to your setup.
+    * See the "Config values" section below for more details.
 * Run: `rm -rf node_modules && npm install --production`
-* Build the Lambda ZIP by running: "zip -r ../icinga-aws-autoscaling-\`date +%s\`.zip ."
+* Build the Lambda ZIP by running: `zip -r ../icinga-aws-autoscaling-$(date +%s).zip .`
+
+### Config values
+* `icinga_host`, `icinga_port`, `icinga_user`, and `icinga_pass` are all required.
+* `icinga_host_os` - Optional. Set to a non-empty string to use as the host's `vars.os` in Icinga.
+* `icinga_hostgroups` - Optional. Set to an array of strings to set the host's hostgroups in Icinga.
 
 ### AWS Setup
 
@@ -102,10 +108,10 @@ index.handler(launchEvent, {}, function() {});
 const terminateEvent = {Records: [{Sns: {Message: "{\"Event\": \"autoscaling:EC2_INSTANCE_TERMINATE\", \"Details\": {\"Availability Zone\": \"us-west-2a\"}, \"EC2InstanceId\": \"i-08fa737d84cf6651b\"}"}}]}
 index.handler(terminateEvent, {}, function() {});
 ```
+* Don't forget to replace the Availability Zone and EC2 Instance ID.
 
 ### TODO:
 
-* Instructions on setting up SNS topic, Lambda function, etc.
 * Dynamic host-groups based on tags.
 * Group hosts by ASG name.
 * Example host-group and service templates for NRPE.
