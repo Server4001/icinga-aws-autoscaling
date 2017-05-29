@@ -20,7 +20,7 @@ exports.handler = (event, context, callback) => {
     if (eventName === 'autoscaling:EC2_INSTANCE_LAUNCH') {
 
         awsApi.ec2Facts(instanceId, region).then((data) => {
-            icingaApi.createHost(instanceId, data.publicDns, data.instanceSize).then(() => {
+            icingaApi.createHost(instanceId, data).then(() => {
                 console.log(`Created Host: ${instanceId}`);
                 callback(null);
             }).catch((error) => {
