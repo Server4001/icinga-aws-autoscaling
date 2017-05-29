@@ -22,9 +22,9 @@ exports.handler = (event, context, callback) => {
         return;
     }
 
-    const eventName = message.Event;
-    const region = message.Details['Availability Zone'].slice(0, -1);
-    const instanceId = message.EC2InstanceId;
+    const eventName = message.event_name;
+    const region = message.region;
+    const instanceId = message.instance_id;
 
     if (eventName === 'autoscaling:EC2_INSTANCE_LAUNCH') {
 

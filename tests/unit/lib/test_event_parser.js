@@ -32,24 +32,32 @@ describe('Event Parser', () => {
     });
 
     it('should return valid message body with all properties', () => {
-        const expectedMessageBody = {
-            Event: 'autoscaling:EC2_INSTANCE_LAUNCH',
-            Details: {
-                'Availability Zone': 'us-west-2'
-            },
-            EC2InstanceId: 'i-294848282821'
-        };
+        const eventName = 'autoscaling:EC2_INSTANCE_LAUNCH';
+        const availabilityZone = 'us-west-2b';
+        const region = 'us-west-2';
+        const instanceId = 'i-294848282821';
 
         const event = {
             Records: [
                 {
                     Sns: {
-                        Message: JSON.stringify(expectedMessageBody)
+                        Message: JSON.stringify({
+                            Event: eventName,
+                            Details: {
+                                'Availability Zone': availabilityZone
+                            },
+                            EC2InstanceId: instanceId
+                        })
                     }
                 }
             ]
         };
 
-        expect(eventParser(event)).to.deep.equal(expectedMessageBody);
+        expect(eventParser(event)).to.deep.equal({
+            event_name: eventName,
+            availability_zone: availabilityZone,
+            region: region,
+            instance_id: instanceId
+        });
     });
 });
