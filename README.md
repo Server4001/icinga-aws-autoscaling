@@ -2,6 +2,12 @@
 
 ## Dynamic management of AWS Auto-Scaling Group inventory in Icinga.
 
+### Purpose
+
+The purpose of this package is to dynamically add and remove hosts in Icinga 2, where the hosts correspond to servers in an AWS Auto-Scaling Group.
+
+Out of the box, no Icinga 2 config changes are necessary, though it can be useful to add configs that assign host-groups and services based on host vars.
+
 ### Preparing the code for AWS Lambda
 * Copy `./config.json.example` to `./config.json`. Replace the settings inside with those applicable to your setup.
     * See the "Config values" section below for more details.
@@ -84,35 +90,40 @@
 * Select "use existing topic", and select the SNS Topic we created earlier.
 * Select the "Launch" and "Terminate" events. This code does not yet support the other event types ("fail to launch" and "fail to terminate").
 * Save the new notification.
-
-#### All together now!
-* Create the SNS topic (see above).
-* Create the Lambda Function (see above).
-* Configure your ASG to publish to the SNS Topic (see above).
 * You should now be able to scale your ASG, and see instances added/removed in Icinga 2.
 
-### Troubleshooting.
+### Troubleshooting
 * The first place to look is the logs for the Lambda Function.
-    * Go to Cloudwatch -> Logs. Choose the log group for your Lambda Function.
+    * Go to Cloudwatch => Logs. Choose the log group for your Lambda Function.
     * If you do not see any Node.js errors, there is not much I can help with. Check your config, check your security groups, etc.
     * If you DO see Node.js errors, it is likely they are related to the requests sent to Icinga 2. Read them and determine if you have a config or security group issue.
-    * Issues with the code in this repo should result in a bug ticket being filed.
+* If you find issues with the code in this repo, please create an issue in GitHub.
 
 ### Running code locally
 * Install all dependencies using: `rm -rf ./node_modules && npm install`
+* Make sure you have AWS credentials set using a credentials file, environment variables, etc.
+    * See the [AWS SDK for JavaScript documentation](http://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials-node.html) for more information.
 * Open a Node.js REPL using: `node`
-* You can simulate an ASG Launch/Terminate event using:
+* You can simulate an ASG Launch/Terminate event using the following code. If everything is set up correctly, you should see hosts added/removed in Icinga.
 ```js
-let index = require('./index')
+const index = require('./index');
+const callback = (result) => { if (result !== null) { console.log(result); } };
+const instanceId = 'i-1234567890abcdef1';
+const az = 'us-west-2b';
 
-const launchEvent = {Records: [{Sns: {Message: "{\"Event\": \"autoscaling:EC2_INSTANCE_LAUNCH\", \"Details\": {\"Availability Zone\": \"us-west-2a\"}, \"EC2InstanceId\": \"i-08fa737d84cf6651b\"}"}}]}
-index.handler(launchEvent, {}, function() {});
+const launchEvent = {Records: [{Sns: {Message: `{"Event": "autoscaling:EC2_INSTANCE_LAUNCH", "Details": {"Availability Zone": "${az}"}, "EC2InstanceId": "${instanceId}"}`}}]};
+index.handler(launchEvent, {}, callback);
 
-const terminateEvent = {Records: [{Sns: {Message: "{\"Event\": \"autoscaling:EC2_INSTANCE_TERMINATE\", \"Details\": {\"Availability Zone\": \"us-west-2a\"}, \"EC2InstanceId\": \"i-08fa737d84cf6651b\"}"}}]}
-index.handler(terminateEvent, {}, function() {});
+const terminateEvent = {Records: [{Sns: {Message: `{"Event": "autoscaling:EC2_INSTANCE_TERMINATE", "Details": {"Availability Zone": "${az}"}, "EC2InstanceId": "${instanceId}"}`}}]};
+index.handler(terminateEvent, {}, callback);
 ```
 * Don't forget to replace the Availability Zone and EC2 Instance ID.
 
 ### Running tests
 * Run tests: `npm run test`
 * Run tests w/ coverage: `npm run test:coverage`
+    * See: `./test.tap` and `./coverage/lcov-report/index.html`
+
+## TODO
+
+* Screenshots of AWS setup.
