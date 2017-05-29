@@ -11,7 +11,7 @@
 ### Config values
 * `icinga_host`, `icinga_port`, `icinga_user`, and `icinga_pass` are all required.
 * `icinga_host_os` - Optional. Set to a non-empty string to use as the host's `vars.os` in Icinga.
-* `icinga_hostgroups` - Optional. Set to an array of strings to set the host's hostgroups in Icinga.
+* `icinga_var_aws_asg_name` - Optional. Set to a non-empty string to set the host's `vars.aws_asg_name` in Icinga. Useful for setting host groups dynamically.
 
 ### AWS Setup
 
