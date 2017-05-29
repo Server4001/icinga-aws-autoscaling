@@ -12,7 +12,7 @@
 * `icinga_host`, `icinga_port`, `icinga_user`, and `icinga_pass` are all required.
 * `icinga_host_vars` - Optional. Set to an object where each key is the host var `vars.KEY`, and each value is the host var's value.
     * EG: `"icinga_host_vars": {"os": "Linux"}` would set `vars.os` to "Linux".
-    * This is useful for dynamically assigning host groups (see example host group config at the bottom of this readme).
+    * This is useful for dynamically assigning host groups (see ./examples/icinga_configs/host_group.conf).
 
 ### AWS Setup
 
