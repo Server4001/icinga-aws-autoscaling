@@ -3,6 +3,7 @@
     "icinga_port": 5665,
     "icinga_user": "root",
     "icinga_pass": "password",
+    "icinga_host_name_property": "instance_id",
     "icinga_host_vars": {
         "os": "Linux",
         "aws_asg_name": "patches",

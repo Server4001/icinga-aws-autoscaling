@@ -10,6 +10,7 @@
 
 ### Config values
 * `icinga_host`, `icinga_port`, `icinga_user`, and `icinga_pass` are all required.
+* `icinga_host_name_property` - Optional, defaults to "instance_id". Determines what to set the name of the host to in Icinga. One of: "instance_id", "public_dns", "public_ip", "private_dns", or "private_ip".
 * `icinga_host_vars` - Optional. Set to an object where each key is the host var `vars.KEY`, and each value is the host var's value.
     * EG: `"icinga_host_vars": {"os": "Linux"}` would set `vars.os` to "Linux".
     * This is useful for dynamically assigning host groups (see ./examples/icinga_configs/host_group.conf).
