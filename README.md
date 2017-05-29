@@ -113,7 +113,6 @@ index.handler(terminateEvent, {}, function() {});
 ```
 * Don't forget to replace the Availability Zone and EC2 Instance ID.
 
-### TODO:
-
-* Tests
-* Add ability to set host's name to either public DNS, private DNS, public IP, private IP, or instance id.
+### Running tests
+* Run tests: `npm run test`
+* Run tests w/ coverage: `npm run test:coverage`

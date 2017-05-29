@@ -4,7 +4,8 @@
   "description": "Manage dynamic inventory in Icinga 2 from an AWS Auto-Scaling Group.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha tests/**/*.js",
+    "test:coverage": "istanbul cover _mocha -- -R tap \"./tests/**/*.js\" > ./test.tap && istanbul report clover",
     "build": "zip -r ./build/icinga-aws-autoscaling-$(date +%s).zip . -x \"*.git*\" -x \"*.idea*\" -x \"*config.json.example*\" -x \"*examples*\" -x \"*build*\""
   },
   "author": "Brice Bentler",
@@ -13,6 +14,8 @@
     "request": "2.81.0"
   },
   "devDependencies": {
-    "aws-sdk": "2.58.0"
+    "aws-sdk": "2.58.0",
+    "istanbul": "0.4.5",
+    "mocha": "3.2.0"
   }
 }

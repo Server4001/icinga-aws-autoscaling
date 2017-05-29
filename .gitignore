@@ -1,4 +1,16 @@
+# IDEs
 /.idea
+
+# Config
 /config.json
+
+# NPM
 /node_modules
+
+# Builds
 /build/*
+/npm-debug.log
+
+# Tests
+/coverage
+/test.tap
