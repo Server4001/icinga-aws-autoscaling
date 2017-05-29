@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+
+// TODO : Parse argv via "minimist".
+
+const lambdaLocal = require('lambda-local');
+const path = require('path');
+let eventPayload;
+
+if (actionIsCreate) {
+    eventPayload = require(path.join(__dirname, '../', 'tests/fixtures/launchEvent'))(instanceId, availabilityZone);
+} else {
+    eventPayload = require(path.join(__dirname, '../', 'tests/fixtures/terminateEvent'))(instanceId, availabilityZone);
+}
+
+lambdaLocal.execute({
+    event: eventPayload,
+    lambdaPath: path.join(__dirname, 'path_to_index.js'),
+    profilePath: '~/.aws/credentials',
+    profileName: 'default',
+    timeoutMs: 3000,
+    callback: function(err, data) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(data);
+        }
+    }
+});

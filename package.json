@@ -6,6 +6,8 @@
   "scripts": {
     "test": "mocha tests/**/*.js",
     "test:coverage": "istanbul cover _mocha -- -R tap \"./tests/**/*.js\" > ./test.tap && istanbul report clover",
+    "test:host:create": "lambda-local -l index.js -h handler -e ./tests/fixtures/launchEvent.js -r us-west-2",
+    "test:host:delete": "lambda-local -l index.js -h handler -e ./tests/fixtures/terminateEvent.js -r us-west-2",
     "build": "zip -r ./build/icinga-aws-autoscaling-$(date +%s).zip . -x \"*.git*\" -x \"*.idea*\" -x \"*config.json.example*\" -x \"*examples*\" -x \"*build*\" -x \"*tests*\""
   },
   "repository": "Server4001/icinga-aws-autoscaling",
@@ -28,6 +30,7 @@
     "aws-sdk": "2.58.0",
     "chai": "3.5.0",
     "istanbul": "0.4.5",
+    "lambda-local": "1.4.2",
     "mocha": "3.2.0"
   },
   "bugs": {
