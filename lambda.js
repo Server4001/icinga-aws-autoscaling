@@ -1,12 +1,22 @@
 'use strict';
 
+const path = require('path');
 const awsApi = require('./lib/aws/api');
-const config = require('./config.json');
+const configLoader = require('./lib/configLoader');
 const eventParser = require('./lib/event_parser');
 const icingaApiFactory = require('./lib/icinga/api');
 const logger = require('./lib/logger');
 
 exports.handler = (event, context, callback) => {
+
+    try {
+        const config = configLoader(path.join(__dirname, 'config.json'));
+    } catch (e) {
+        logger(true, e);
+        callback({ message: e.message });
+
+        return;
+    }
 
     let verbose = false;
     if (config.verbose === true || config.verbose === 'true' || config.verbose === 1) {
