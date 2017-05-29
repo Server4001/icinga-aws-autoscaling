@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "zip -r ./icinga-aws-autoscaling-$(date +%s).zip ."
+    "build": "zip -r ./build/icinga-aws-autoscaling-$(date +%s).zip . -x \"*.git*\" -x \"*.idea*\" -x \"*config.json.example*\" -x \"*examples*\" -x \"*build*\""
   },
   "author": "Brice Bentler",
   "license": "MIT",
