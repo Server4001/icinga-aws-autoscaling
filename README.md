@@ -113,8 +113,6 @@ index.handler(terminateEvent, {}, function() {});
 
 ### TODO:
 
-* Dynamic host-groups based on tags.
-* Group hosts by ASG name.
-* Example host-group and service templates for NRPE.
-* Move AWS SDK to dev dependencies, as Lambda includes it.
-* Deploy script.
+* Tests
+* Add zip command to NPM script.
+* Add ability to set host's name to either public DNS, private DNS, public IP, private IP, or instance id.
