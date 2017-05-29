@@ -6,7 +6,8 @@
 * Copy `./config.json.example` to `./config.json`. Replace the settings inside with those applicable to your setup.
     * See the "Config values" section below for more details.
 * Run: `rm -rf node_modules && npm install --production`
-* Build the Lambda ZIP by running: `zip -r ../icinga-aws-autoscaling-$(date +%s).zip .`
+* Build the Lambda ZIP by running: `npm run build`
+    * This will produce an `icinga-aws-autoscaling-{timestamp}.zip` file for you to upload to AWS Lambda.
 
 ### Config values
 * `icinga_host`, `icinga_port`, `icinga_user`, and `icinga_pass` are all required.
@@ -115,5 +116,4 @@ index.handler(terminateEvent, {}, function() {});
 ### TODO:
 
 * Tests
-* Add zip command to NPM script.
 * Add ability to set host's name to either public DNS, private DNS, public IP, private IP, or instance id.

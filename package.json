@@ -4,7 +4,8 @@
   "description": "Manage dynamic inventory in Icinga 2 from an AWS Auto-Scaling Group.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "zip -r ./icinga-aws-autoscaling-$(date +%s).zip ."
   },
   "author": "Brice Bentler",
   "license": "MIT",
