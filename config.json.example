@@ -3,10 +3,9 @@
     "icinga_port": 5665,
     "icinga_user": "root",
     "icinga_pass": "password",
-    "icinga_host_os": "Linux",
-    "icinga_var_aws_asg_name": "patches",
-    "icinga_hostgroups": [
-        "aws",
-        "some-other-group"
-    ]
+    "icinga_host_vars": {
+        "os": "Linux",
+        "aws_asg_name": "patches",
+        "lemp_app": true
+    }
 }
