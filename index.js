@@ -1,4 +1,5 @@
 'use strict';
+
 const awsApi = require('./lib/aws/api');
 const config = require('./config.json');
 const eventParser = require('./lib/event_parser');
