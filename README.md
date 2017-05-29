@@ -7,7 +7,7 @@
     * See the "Config values" section below for more details.
 * Run: `rm -rf node_modules && npm install --production`
 * Build the Lambda ZIP by running: `npm run build`
-    * This will produce an `icinga-aws-autoscaling-{timestamp}.zip` file for you to upload to AWS Lambda.
+    * This will produce a zip file in the `./build` folder for you to upload to AWS Lambda.
 
 ### Config values
 * `icinga_host`, `icinga_port`, `icinga_user`, and `icinga_pass` are all required.
