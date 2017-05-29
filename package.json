@@ -1,7 +1,7 @@
 {
-  "name": "icinga-aws-asg",
+  "name": "icinga-aws-autoscaling",
   "version": "0.1.0",
-  "description": "Manage dynamic inventory in Icinga 2 from an AWS Auto-Scaling Group.",
+  "description": "Dynamic management of AWS Auto-Scaling Group inventory in Icinga.",
   "main": "index.js",
   "scripts": {
     "test": "mocha tests/**/*.js",
