@@ -9,7 +9,9 @@
   "author": "Brice Bentler",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "2.58.0",
     "request": "2.81.0"
+  },
+  "devDependencies": {
+    "aws-sdk": "2.58.0"
   }
 }
