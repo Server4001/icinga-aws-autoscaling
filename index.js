@@ -34,12 +34,17 @@ exports.handler = (event, context, callback) => {
 
     } else if (eventName === 'autoscaling:EC2_INSTANCE_TERMINATE') {
 
-        icingaApi.deleteHost(instanceId).then(() => {
-            console.log(`Deleted Host: ${instanceId}`);
-            callback(null);
-        }).catch((error) => {
-            console.log(error);
-            callback({ message: error.message });
+        awsApi.ec2Facts(instanceId, region).then((data) => {
+            icingaApi.deleteHost(instanceId, data).then(() => {
+                console.log(`Deleted Host: ${instanceId}`);
+                callback(null);
+            }).catch((error) => {
+                console.log(error);
+                callback({ message: error.message });
+            });
+        }).catch((err) => {
+            console.log('Error', err.stack);
+            callback({ message: err.message, code: err.code });
         });
 
     } else {
