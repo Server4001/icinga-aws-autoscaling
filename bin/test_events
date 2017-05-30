@@ -1,28 +1,56 @@
 #!/usr/bin/env node
 
-// TODO : Parse argv via "minimist".
+'use strict';
 
+const fs = require('fs');
 const lambdaLocal = require('lambda-local');
 const path = require('path');
-let eventPayload;
 
-if (actionIsCreate) {
-    eventPayload = require(path.join(__dirname, '../', 'tests/fixtures/launchEvent'))(instanceId, availabilityZone);
-} else {
-    eventPayload = require(path.join(__dirname, '../', 'tests/fixtures/terminateEvent'))(instanceId, availabilityZone);
+try {
+    require.resolve('minimist');
+} catch(e) {
+    console.error('Cannot find package minimist. This executable file should only be used when dev dependencies have been installed.');
+    process.exit(1);
 }
 
+/**
+ * @var {Object} argv
+ * @property {*} h
+ */
+let argv = require('minimist')(process.argv.slice(2));
+let create = true;
+
+if (argv.h !== undefined || argv.help !== undefined) {
+    return fs.createReadStream(path.join(__dirname, '../', 'usage_test_events.txt'))
+        .pipe(process.stdout)
+        .on('close', function () { process.exit(1) });
+}
+if (argv.v !== undefined || argv.version !== undefined) {
+    return console.log(require('../package.json').version);
+}
+if (argv._.length < 2) {
+    console.error('Must pass in instanceId and availability zone as arguments, in that order.');
+    process.exit(1);
+}
+if (argv.d !== undefined || argv.delete !== undefined) {
+    create = false;
+}
+
+const [instanceId, availabilityZone] = argv._;
+const region = availabilityZone.slice(0, -1);
+const timeout = argv.t || argv.timeout || 3000;
+let fixtureFile = 'terminateEvent';
+
+if (create) {
+    fixtureFile = 'launchEvent';
+}
+
+const eventPayload = require(path.join(__dirname, '../', `tests/fixtures/${fixtureFile}`))(instanceId, availabilityZone);
+
 lambdaLocal.execute({
+    region,
     event: eventPayload,
-    lambdaPath: path.join(__dirname, 'path_to_index.js'),
-    profilePath: '~/.aws/credentials',
-    profileName: 'default',
-    timeoutMs: 3000,
-    callback: function(err, data) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(data);
-        }
-    }
+    lambdaHandler: 'handler',
+    lambdaPath: path.join(__dirname, '../', 'index.js'),
+    timeoutMs: timeout
 });
