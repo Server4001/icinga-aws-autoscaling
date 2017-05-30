@@ -116,3 +116,6 @@ index.handler(terminateEvent, {}, function() {});
 ### Running tests
 * Run tests: `npm run test`
 * Run tests w/ coverage: `npm run test:coverage`
+
+### TODO
+* Add full event payload to fixtures.

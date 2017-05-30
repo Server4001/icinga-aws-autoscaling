@@ -1,12 +1,12 @@
 {
   "name": "icinga-aws-autoscaling",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Dynamic management of AWS Auto-Scaling Group inventory in Icinga.",
   "main": "index.js",
   "scripts": {
     "test": "mocha tests/**/*.js",
     "test:coverage": "istanbul cover _mocha -- -R tap \"./tests/**/*.js\" > ./test.tap && istanbul report clover",
-    "build": "zip -r ./build/icinga-aws-autoscaling-$(date +%s).zip . -x \"*.git*\" -x \"*.idea*\" -x \"*config.json.example*\" -x \"*examples*\" -x \"*build*\" -x \"*tests*\""
+    "build": "zip -r ./build/icinga-aws-autoscaling-$(date +%s).zip . -x \"*.git*\" -x \"*.idea*\" -x \"*config.json.example*\" -x \"*examples*\" -x \"*build*\" -x \"*tests*\" -x \"*usage_test_events.txt*\""
   },
   "repository": "Server4001/icinga-aws-autoscaling",
   "keywords": [
@@ -28,6 +28,8 @@
     "aws-sdk": "2.58.0",
     "chai": "3.5.0",
     "istanbul": "0.4.5",
+    "lambda-local": "1.4.2",
+    "minimist": "1.2.0",
     "mocha": "3.2.0"
   },
   "bugs": {

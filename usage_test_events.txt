@@ -1,0 +1,12 @@
+test_events instanceId availabilityZone [options]
+
+Examples:
+    test_events i-1118a6521543bfe35 us-west-2c -a delete
+    test_events i-366a1efa93b14532e us-west-2a --action=create
+
+Options:
+  -a, --action                  Whether to create or delete a host in Icinga 2.
+                                One of: "create", "delete", "c", or "d".
+                                                    (DEFAULT "create") [string]
+  -t, --timeout                 Amount of time in milliseconds to allow the
+                                lambda to run for.     (DEFAULT 3000) [integer]
