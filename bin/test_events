@@ -3,13 +3,15 @@
 'use strict';
 
 const fs = require('fs');
-const lambdaLocal = require('lambda-local');
 const path = require('path');
+let minimist, lambdaLocal;
 
 try {
-    require.resolve('minimist');
+    minimist = require('minimist');
+    lambdaLocal = require('lambda-local');
 } catch(e) {
-    console.error('Cannot find package minimist. This executable file should only be used when dev dependencies have been installed.');
+    console.error(e.message);
+    console.error('This executable should only be used when dev dependencies have been installed.');
     process.exit(1);
 }
 
@@ -17,7 +19,7 @@ try {
  * @var {Object} argv
  * @property {*} h
  */
-let argv = require('minimist')(process.argv.slice(2));
+let argv = minimist(process.argv.slice(2));
 let create = true;
 
 if (argv.h !== undefined || argv.help !== undefined) {
