@@ -118,4 +118,4 @@ index.handler(terminateEvent, {}, function() {});
 * Run tests w/ coverage: `npm run test:coverage`
 
 ### TODO
-* Lambda function tester in bin folder.
+* Add full event payload to fixtures.
