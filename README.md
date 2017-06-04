@@ -124,6 +124,7 @@ lambda.handler(terminateEvent, {}, callback);
 * Run tests w/ coverage: `npm run test:coverage`
     * See: `./test.tap` and `./coverage/lcov-report/index.html`
 
-## TODO
+### TODO
 
 * Screenshots of AWS setup.
+* Add full event payload to fixtures.
