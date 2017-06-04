@@ -9,8 +9,11 @@ const logger = require('./lib/logger');
 
 exports.handler = (event, context, callback) => {
 
+    let config;
+    let verbose = false;
+
     try {
-        const config = configLoader(path.join(__dirname, 'config.json'));
+        config = configLoader(path.join(__dirname, 'config.json'));
     } catch (e) {
         logger(true, e);
         callback({ message: e.message });
@@ -18,7 +21,6 @@ exports.handler = (event, context, callback) => {
         return;
     }
 
-    let verbose = false;
     if (config.verbose === true || config.verbose === 'true' || config.verbose === 1) {
         verbose = true;
     }
